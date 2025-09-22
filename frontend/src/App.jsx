@@ -5,6 +5,7 @@ import { Home } from "./pages/Home/Home";
 import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/Footer/Footer";
+import LoginPagePopup from "./components/LoginPopup/LoginPopup";
 
 const App = () => {
   return (

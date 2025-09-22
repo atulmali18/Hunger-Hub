@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { assets } from "../../assets/assets.js";
+import LoginPopup from "../LoginPopup/LoginPopup"; 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false); // Login popup state
 
   const navItems = [
     { id: "home", label: "Home" },
@@ -34,11 +36,7 @@ const Navbar = () => {
                     after:bottom-0 after:h-[2px] after:bg-red-500 
                     after:w-0 after:transition-all after:duration-300 
                     hover:after:w-full
-                    ${
-                      isMenuOpen === item.id
-                        ? "text-red-500 after:w-full"
-                        : "hover:text-red-400"
-                    }
+                    ${isMenuOpen === item.id ? "text-red-500 after:w-full" : "hover:text-red-400"}
                   `}
                 >
                   {item.label}
@@ -49,21 +47,19 @@ const Navbar = () => {
 
           {/* Desktop Right Section */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6">
-            {/* Search */}
             <img
               src={assets.search_icon}
               alt="Search"
               className="w-5 cursor-pointer hover:opacity-70"
             />
-
-            {/* Cart Icon with dot */}
             <div className="relative cursor-pointer">
               <img src={assets.basket_icon} alt="Cart" className="w-6" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
             </div>
-
-            {/* Sign In Button */}
-            <button className="px-4 lg:px-5 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition text-sm lg:text-base">
+            <button
+              onClick={() => setIsLoginOpen(true)}
+              className="px-4 lg:px-5 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition text-sm lg:text-base"
+            >
               Sign In
             </button>
           </div>
@@ -98,17 +94,13 @@ const Navbar = () => {
                   }}
                   className={`
                     block px-3 py-2 rounded-md text-base font-medium cursor-pointer transition
-                    ${
-                      isMenuOpen === item.id
-                        ? "text-red-500 bg-red-50"
-                        : "text-gray-700 hover:text-red-500 hover:bg-gray-50"
-                    }
+                    ${isMenuOpen === item.id ? "text-red-500 bg-red-50" : "text-gray-700 hover:text-red-500 hover:bg-gray-50"}
                   `}
                 >
                   {item.label}
                 </a>
               ))}
-              
+
               {/* Mobile Right Section */}
               <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 mt-4">
                 <div className="flex items-center gap-4">
@@ -122,7 +114,10 @@ const Navbar = () => {
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
                   </div>
                 </div>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition text-sm">
+                <button
+                  onClick={() => setIsLoginOpen(true)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition text-sm"
+                >
                   Sign In
                 </button>
               </div>
@@ -130,6 +125,9 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {/* Login Popup */}
+      <LoginPopup isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </nav>
   );
 };

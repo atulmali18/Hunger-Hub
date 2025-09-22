@@ -28,11 +28,11 @@ const FoodItem = ({_id,category,description,image,name,price,}) => {
             </span>
           </div>
           
-          <div className='flex justify-between items-center'>
-            <p className='text-xl font-bold text-green-600'>${price}</p>
+          <div className='flex justify-between items-center'><p className="text-xl font-bold text-green-600">₹{price}</p>
+
             {!cartItems[_id] ? (
               <button 
-                className='bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105'
+                className='bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105'
                 onClick={() => addToCart(_id)}
               >
                 Add to Cart
@@ -40,14 +40,14 @@ const FoodItem = ({_id,category,description,image,name,price,}) => {
             ) : (
               <div className='flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2'>
                 <button 
-                  className='bg-gray-200 hover:bg-gray-300 text-gray-700 w-8 h-8 rounded-full text-lg font-bold transition-all duration-200 hover:scale-110 flex items-center justify-center' 
+                  className='bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-700 w-8 h-8 rounded-full text-lg font-bold transition-all duration-200 hover:scale-110 flex items-center justify-center' 
                   onClick={() => removeToCart(_id)}
                 >
                   −
                 </button>
                 <span className='text-gray-800 text-lg font-semibold min-w-[20px] text-center'>{cartItems[_id]}</span>
                 <button 
-                  className='bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-lg font-bold transition-all duration-200 hover:scale-110 flex items-center justify-center' 
+                  className='bg-orange-500 cursor-pointer hover:bg-orange-600 text-white w-8 h-8 rounded-full text-lg font-bold transition-all duration-200 hover:scale-110 flex items-center justify-center' 
                   onClick={() => {
                     addToCart(_id);
                   }}

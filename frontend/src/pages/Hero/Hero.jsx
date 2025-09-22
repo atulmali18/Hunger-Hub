@@ -15,7 +15,7 @@ const Hero = () => {
       }}
     >
       {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg"></div>
+      <div className="absolute inset-0 bg-opacity-500 rounded-lg"></div>
       
       {/* Content with pure fade-in animation */}
       <motion.div
