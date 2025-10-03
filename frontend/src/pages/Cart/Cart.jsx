@@ -35,7 +35,7 @@ const Cart = () => {
                         />
                         <div>
                           <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{item.name}</h3>
-                          <p className="text-gray-600 text-xs sm:text-sm">${item.price}</p>
+                          <p className="text-gray-600 text-xs sm:text-sm">₹{item.price}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 sm:space-x-3">
@@ -59,16 +59,16 @@ const Cart = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm sm:text-base">
                   <span>Subtotal:</span>
-                  <span>${getTotalCartAmount()}</span>
+                  <span>₹{getTotalCartAmount()}</span>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base">
                   <span>Delivery Fee:</span>
-                  <span>$2.00</span>
+                  <span>₹30.00</span>
                 </div>
                 <div className="border-t pt-2">
                   <div className="flex justify-between font-semibold text-base sm:text-lg">
                     <span>Total:</span>
-                    <span>${getTotalCartAmount() + 2}</span>
+                    <span>₹{getTotalCartAmount() + 30}</span>
                   </div>
                 </div>
               </div>
