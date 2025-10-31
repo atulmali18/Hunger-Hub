@@ -9,7 +9,7 @@ const PORT = 4000
 //middleware
 app.use(express.json())
 app.use(cors())
-app.use()
+app.use("/images", express.static('uploads'))
 
 //DB Connect
 connectDB()
