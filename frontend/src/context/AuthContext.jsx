@@ -33,21 +33,21 @@ export const AuthProvider = ({ children }) => {
 
     // Signup API
     const signup = async (data) => {
-        const res = await api.post("/signup", data);
+        const res = await api.post("/user/signup", data);
         loginUser(res.data.user, res.data.token);
         return res.data;
     };
 
     // Login API
     const login = async (data) => {
-        const res = await api.post("/login", data);
+        const res = await api.post("/user/login", data);
         loginUser(res.data.user, res.data.token);
         return res.data;
     };
 
     // Get profile API
     const getProfile = async () => {
-        const res = await api.get("/profile");
+        const res = await api.get("/user/profile");
         return res.data;
     };
 

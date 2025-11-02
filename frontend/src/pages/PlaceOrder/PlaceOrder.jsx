@@ -1,8 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import { usePlaceOrder } from "../../context/PlaceOrderContext";
 
 const PlaceOrder = () => {
   const { getTotalCartAmount } = useContext(StoreContext);
+  const { placeOrder, loading, orderError } = usePlaceOrder();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -10,8 +12,10 @@ const PlaceOrder = () => {
     phone: "",
     address: "",
     city: "",
+    state: "",
     zipCode: "",
     paymentMethod: "card",
+    notes: "",
   });
 
   const handleInputChange = (e) => {
@@ -21,9 +25,9 @@ const PlaceOrder = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Order submitted:", formData);
+    await placeOrder(formData);
   };
 
   const deliveryFee = 30;
@@ -132,6 +136,19 @@ const PlaceOrder = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     ZIP Code
                   </label>
                   <input
@@ -174,6 +191,33 @@ const PlaceOrder = () => {
                   </label>
                 </div>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Order Notes
+                </label>
+                <textarea
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:bg-gray-400"
+              >
+                {loading ? "Processing..." : "Place Order →"}
+              </button>
+
+              {orderError && (
+                <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                  {orderError}
+                </div>
+              )}
             </form>
           </div>
 
@@ -202,13 +246,6 @@ const PlaceOrder = () => {
                 <span>₹{total}</span>
               </div>
             </div>
-
-            <button
-              onClick={handleSubmit}
-              className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer"
-            >
-              Confirm & Place Order →
-            </button>
 
             <p className="text-center text-xs sm:text-sm text-gray-500 mt-4">
               By placing this order, you agree to our Terms & Conditions.

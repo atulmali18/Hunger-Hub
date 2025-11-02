@@ -7,10 +7,13 @@ import cartRouter from './routes/cart.route.js';
 import orderRouter from './routes/order.route.js';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 const app = express()
 const PORT = 4000
+
+
 
 //middleware
 app.use(express.json())

@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
-import { useNavigate } from "react-router-dom"
-
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/AuthContext.jsx";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
@@ -13,7 +14,8 @@ const Cart = () => {
     getTotalCartAmount,
   } = useContext(StoreContext);
 
-  const navigate = useNavigate()
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const deliveryFee = 60;
   const totalAmount = getTotalCartAmount() + deliveryFee;
@@ -25,6 +27,16 @@ const Cart = () => {
       // if quantity is 1, removing should clear item completely
       removeFromCart(itemId);
     }
+  };
+
+  const handleProceedToCheckout = () => {
+    if (!user) {
+      toast.error("Please login to proceed to checkout");
+      // trigger global event to open login modal (Navbar listens for this)
+      window.dispatchEvent(new CustomEvent("show-login"));
+      return;
+    }
+    navigate("/order");
   };
 
   return (
@@ -135,7 +147,10 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button onClick={() => navigate('/order')} className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer">
+              <button
+                onClick={handleProceedToCheckout}
+                className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer"
+              >
                 Proceed to Checkout →
               </button>
             </div>
