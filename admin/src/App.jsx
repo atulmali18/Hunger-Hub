@@ -5,13 +5,14 @@ import { Route, Routes } from 'react-router-dom'
 import Add from './pages/Add'
 import List from './pages/List'
 import Order from './pages/Order'
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast'
+
 
 
 const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <ToastContainer />
+      <Toaster position="top-right" reverseOrder={false} />
       <Navbar />
       <hr className="border-gray-200" />
       <div className="flex">

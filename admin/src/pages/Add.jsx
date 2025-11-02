@@ -1,58 +1,36 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-import { toast } from 'react-toastify';
+import { useFood } from '../context/FoodContext';
+
 const Add = () => {
+  const { addFood } = useFood();
+
   const [image, setImage] = useState(null);
   const [data, setData] = useState({
-    name: '',
-    price: '',
-    description: '',
-    category: 'Salad',
+    name: "",
+    price: "",
+    description: "",
+    category: "Salad",
   });
 
-  const url = "http://localhost:4000"
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
-  };
 
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-
-    console.log({
-      ...data,
-      image: image ? image.name : 'No image selected',
-    });
 
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("price", data.price);
     formData.append("category", data.category);
-    formData.append("image", image); // ✅ actual File object, not string
+    formData.append("image", image);
 
-    try {
-      const response = await axios.post(`${url}/api/food/add`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    addFood(formData); // ✅ call context function
 
-      if (response.data.success) {
-        setData({
-          name: '',
-          price: '',
-          description: '',
-          category: 'Salad',
-        });
-        setImage(false);
-        toast.success(response.data.message)
-      }
-    } catch (error) {
-      console.log("Error uploading:",);
-      toast.error(error.response?.data || error.message)
-    }
+    // reset form
+    setData({ name: "", price: "", description: "", category: "Salad" });
+    setImage(null);
   };
-
 
   return (
     <div>

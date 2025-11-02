@@ -1,23 +1,47 @@
-import { createContext, useState } from "react";
-import { food_list } from "../assets/assets";
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-
+  const [food_list, setFoodList] = useState([]); // dynamic food list
   const [cartItems, setCartItems] = useState({});
 
-  const addToCart = (itemId) => {
-    if (cartItems[itemId]) {
-      setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-    } else {
-      setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
+  // Fetch food items from backend
+  const fetchFoodList = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/api/food/list");
+      if (res.data.success) {
+        setFoodList(res.data.data);
+      } else {
+        toast.error("Failed to load food items");
+      }
+    } catch (error) {
+      console.error("Error fetching food list:", error);
+      toast.error("Server error, please try again later");
     }
-  }
+  };
+
+  useEffect(() => {
+    fetchFoodList();
+  }, []);
+
+  // Cart Functions
+  const addToCart = (itemId) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: prev[itemId] ? prev[itemId] + 1 : 1,
+    }));
+    toast.success("Added to cart!");
+  };
 
   const removeToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
-  }
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: prev[itemId] > 1 ? prev[itemId] - 1 : 0,
+    }));
+  };
 
   const removeFromCart = (itemId) => {
     setCartItems((prev) => {
@@ -25,18 +49,19 @@ const StoreContextProvider = (props) => {
       delete newCart[itemId];
       return newCart;
     });
-  }
+    toast.success("Removed from cart!");
+  };
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product._id === item);
-        totalAmount += itemInfo.price * cartItems[item];
+        const itemInfo = food_list.find((product) => product._id === item);
+        if (itemInfo) totalAmount += itemInfo.price * cartItems[item];
       }
     }
     return totalAmount;
-  }
+  };
 
   const contextValue = {
     food_list,
@@ -47,7 +72,6 @@ const StoreContextProvider = (props) => {
     removeFromCart,
     getTotalCartAmount,
   };
-
 
   return (
     <StoreContext.Provider value={contextValue}>

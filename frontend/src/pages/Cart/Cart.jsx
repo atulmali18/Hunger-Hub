@@ -69,7 +69,7 @@ const Cart = () => {
                     >
                       <div className="flex items-center gap-4">
                         <img
-                          src={item.image}
+                          src={`http://localhost:4000/images/${item.image}`}
                           alt={item.name}
                           className="w-16 h-16 rounded-xl object-cover border border-gray-200"
                         />
@@ -135,7 +135,7 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button onClick={()=>navigate('/order')} className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer">
+              <button onClick={() => navigate('/order')} className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer">
                 Proceed to Checkout →
               </button>
             </div>

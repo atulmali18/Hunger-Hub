@@ -2,6 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
 import foodRouter from './routes/food.route.js';
+import userRouter from './routes/user.route.js';
+import cartRouter from './routes/cart.route.js';
+import orderRouter from './routes/order.route.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express()
 const PORT = 4000
@@ -16,6 +22,9 @@ connectDB()
 
 // API End points
 app.use('/api/food', foodRouter)
+app.use('/api/user', userRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/orders', orderRouter)
 
 
 app.get('/', (req, res) => {

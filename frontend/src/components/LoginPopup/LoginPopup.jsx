@@ -1,10 +1,32 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
+import { useUser } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
-const LoginPopup = ({setShowLogin}) => {
+const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Sign Up");
-  console.log(currState);
-  
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const { signup, login } = useUser();
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (currState === "Sign Up") {
+        await signup(formData);
+        toast.success("Signup successful!");
+      } else {
+        await login(formData);
+        toast.success("Login successful!");
+      }
+      setShowLogin(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Server error, try again later");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
@@ -14,41 +36,42 @@ const LoginPopup = ({setShowLogin}) => {
           <h2 className="text-2xl font-bold text-red-500">{currState}</h2>
           <img
             src={assets.cross_icon}
-            className="text-gray-500 hover:text-red-500 text-xl font-bold"
+            className="cursor-pointer"
             onClick={() => setShowLogin(false)}
-            />            
+          />
         </div>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {currState === "Sign Up" && (
-            <div>
-              <input
-                type="text"
-                placeholder="Username"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Username"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+              required
+            />
           )}
-
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              required
-            />
-          </div>
-
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              required
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            required
+          />
 
           <button
             type="submit"
@@ -58,31 +81,30 @@ const LoginPopup = ({setShowLogin}) => {
           </button>
         </form>
 
-      {/* Toggle Auth State */}
-<div className="mt-4 text-center text-sm text-gray-600">
-  {currState === "Sign Up" ? (
-    <p>
-      Already have an account?{" "}
-      <span
-        onClick={() => setCurrState("Log In")}
-        className="text-red-500 font-medium cursor-pointer hover:underline"
-      >
-        Log In
-      </span>
-    </p>
-  ) : (
-    <p>
-      Don't have an account?{" "}
-      <span
-        onClick={() => setCurrState("Sign Up")}
-        className="text-red-500 font-medium cursor-pointer hover:underline"
-      >
-        Sign Up
-      </span>
-    </p>
-  )}
-</div>
-
+        {/* Toggle Auth State */}
+        <div className="mt-4 text-center text-sm text-gray-600">
+          {currState === "Sign Up" ? (
+            <p>
+              Already have an account?{" "}
+              <span
+                onClick={() => setCurrState("Log In")}
+                className="text-red-500 font-medium cursor-pointer hover:underline"
+              >
+                Log In
+              </span>
+            </p>
+          ) : (
+            <p>
+              Don't have an account?{" "}
+              <span
+                onClick={() => setCurrState("Sign Up")}
+                className="text-red-500 font-medium cursor-pointer hover:underline"
+              >
+                Sign Up
+              </span>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
