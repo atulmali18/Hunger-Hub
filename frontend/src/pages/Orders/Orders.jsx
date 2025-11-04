@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { orderApi } from "../../utils/api";
+import { orderApi } from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
 import OrderCard from "./OrderCard";
 import CancelModal from "./CancelModal";

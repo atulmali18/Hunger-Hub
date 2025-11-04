@@ -19,10 +19,10 @@ const PORT = 4000
 app.use(express.json())
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173",
+        "https://your-frontend-url.onrender.com"],
     credentials: true,
 }));
-
 app.use("/images", express.static('uploads'))
 
 //DB Connect

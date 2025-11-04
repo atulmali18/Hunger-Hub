@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
+import axiosInstance from "../../utils/axiosInstance";
 
 const FoodContext = createContext();
 
@@ -10,25 +10,24 @@ export const FoodProvider = ({ children }) => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const url = "http://localhost:4000";
-
-    // Fetch all foods
+    // -------------------- Fetch all foods --------------------
     const fetchFoods = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`${url}/api/food/list`);
+            const res = await axiosInstance.get("/food/list");
             if (res.data.success) setFoods(res.data.data);
         } catch (error) {
             console.error(error);
             toast.error("Failed to fetch foods");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
-    // Add food
+    // -------------------- Add food --------------------
     const addFood = async (formData) => {
         try {
-            const res = await axios.post(`${url}/api/food/add`, formData, {
+            const res = await axiosInstance.post("/food/add", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {
@@ -37,14 +36,14 @@ export const FoodProvider = ({ children }) => {
             }
         } catch (error) {
             console.error(error);
-            toast.error(error.response?.data.message || "Failed to add food");
+            toast.error(error.response?.data?.message || "Failed to add food");
         }
     };
 
-    // Delete food
+    // -------------------- Delete food --------------------
     const deleteFood = async (id) => {
         try {
-            const res = await axios.delete(`${url}/api/food/remove/${id}`);
+            const res = await axiosInstance.delete(`/food/remove/${id}`);
             if (res.data.success) {
                 setFoods((prev) => prev.filter((food) => food._id !== id));
                 toast.success("Food deleted successfully");
@@ -55,10 +54,10 @@ export const FoodProvider = ({ children }) => {
         }
     };
 
-    // Update food
+    // -------------------- Update food --------------------
     const updateFood = async (id, formData) => {
         try {
-            const res = await axios.put(`${url}/api/food/update/${id}`, formData, {
+            const res = await axiosInstance.put(`/food/update/${id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {
@@ -69,7 +68,7 @@ export const FoodProvider = ({ children }) => {
             }
         } catch (error) {
             console.error(error);
-            toast.error(error.response?.data.message || "Failed to update food");
+            toast.error(error.response?.data?.message || "Failed to update food");
         }
     };
 

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Sign Up");
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false); // <-- loading state
   const { signup, login } = useAuth();
 
   const handleChange = (e) =>
@@ -13,7 +14,7 @@ const LoginPopup = ({ setShowLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       if (currState === "Sign Up") {
         await signup(formData);
@@ -25,6 +26,8 @@ const LoginPopup = ({ setShowLogin }) => {
       setShowLogin(false);
     } catch (err) {
       toast.error(err.response?.data?.message || "Server error, try again later");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,6 +39,7 @@ const LoginPopup = ({ setShowLogin }) => {
           <h2 className="text-2xl font-bold text-red-500">{currState}</h2>
           <img
             src={assets.cross_icon}
+            alt="close"
             className="cursor-pointer"
             onClick={() => setShowLogin(false)}
           />
@@ -75,9 +79,13 @@ const LoginPopup = ({ setShowLogin }) => {
 
           <button
             type="submit"
-            className="w-full bg-red-500 text-white font-semibold py-2 rounded-full hover:bg-red-600 transition"
+            className="w-full bg-red-500 text-white font-semibold py-2 rounded-full hover:bg-red-600 transition flex justify-center items-center gap-2"
+            disabled={loading} // disable button while loading
           >
-            {currState}
+            {loading ? (
+              <span className="loader border-t-white border-t-2 w-4 h-4 rounded-full animate-spin"></span>
+            ) : null}
+            {loading ? "Processing..." : currState}
           </button>
         </form>
 

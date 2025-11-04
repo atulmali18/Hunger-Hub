@@ -1,17 +1,17 @@
 import { createContext, useState, useEffect } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
+import axiosInstance from "../utils/axiosInstance"; // use centralized axios instance
 
 export const StoreContext = createContext(null);
 
-const StoreContextProvider = (props) => {
+const StoreContextProvider = ({ children }) => {
   const [food_list, setFoodList] = useState([]); // dynamic food list
   const [cartItems, setCartItems] = useState({});
 
-  // Fetch food items from backend
+  // -------------------- Fetch food items from backend --------------------
   const fetchFoodList = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/food/list");
+      const res = await axiosInstance.get("/food/list"); // use axiosInstance
       if (res.data.success) {
         setFoodList(res.data.data);
       } else {
@@ -27,7 +27,7 @@ const StoreContextProvider = (props) => {
     fetchFoodList();
   }, []);
 
-  // Cart Functions
+  // -------------------- Cart Functions --------------------
   const addToCart = (itemId) => {
     setCartItems((prev) => ({
       ...prev,
@@ -53,14 +53,11 @@ const StoreContextProvider = (props) => {
   };
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        const itemInfo = food_list.find((product) => product._id === item);
-        if (itemInfo) totalAmount += itemInfo.price * cartItems[item];
-      }
-    }
-    return totalAmount;
+    return Object.entries(cartItems).reduce((total, [itemId, qty]) => {
+      const itemInfo = food_list.find((product) => product._id === itemId);
+      if (itemInfo) total += itemInfo.price * qty;
+      return total;
+    }, 0);
   };
 
   const contextValue = {
@@ -75,7 +72,7 @@ const StoreContextProvider = (props) => {
 
   return (
     <StoreContext.Provider value={contextValue}>
-      {props.children}
+      {children}
     </StoreContext.Provider>
   );
 };

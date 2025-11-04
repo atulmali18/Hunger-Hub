@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { orderApi } from '../utils/api.js';
+import { orderApi } from '../utils/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from './StoreContext';
 import toast from 'react-hot-toast';
@@ -74,7 +74,7 @@ export const PlaceOrderProvider = ({ children }) => {
                         }
                     },
                     modal: {
-                        ondismiss: function() {
+                        ondismiss: function () {
                             navigate("/verify?status=failed&type=payment");
                         }
                     }
