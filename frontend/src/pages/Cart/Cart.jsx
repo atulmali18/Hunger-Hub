@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 
 const Cart = () => {
@@ -14,7 +14,7 @@ const Cart = () => {
     getTotalCartAmount,
   } = useContext(StoreContext);
 
-  const { user } = useUser();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const deliveryFee = 60;

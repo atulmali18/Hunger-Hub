@@ -1,20 +1,27 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
+import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import StoreContextProvider from "./context/StoreContext.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
+
+import { AuthProvider } from "./context/AuthContext";
+import StoreContextProvider from "./context/StoreContext";
 import { PlaceOrderProvider } from "./context/PlaceOrderContext";
+import { FoodProvider } from "./context/Admin/FoodContext";
+import { OrderProvider } from "./context/Admin/OrderContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <StoreContextProvider>
-          <PlaceOrderProvider>
-            <App />
-          </PlaceOrderProvider>
+          <FoodProvider>
+            <OrderProvider>
+              <PlaceOrderProvider>
+                <App />
+              </PlaceOrderProvider>
+            </OrderProvider>
+          </FoodProvider>
         </StoreContextProvider>
       </AuthProvider>
     </BrowserRouter>

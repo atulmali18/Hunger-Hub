@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets.js";
-import { useUser } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { StoreContext } from "../../context/StoreContext";
 import toast from "react-hot-toast";
 // icons
 import { FiClipboard, FiBell, FiShoppingCart, FiUser, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 
 const Navbar = ({ setShowLogin }) => {
-  const { user, logoutUser } = useUser();
+  const { user, logout } = useAuth();
   const { cartItems } = useContext(StoreContext);
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const Navbar = ({ setShowLogin }) => {
   }, [setShowLogin]);
 
   const handleLogout = () => {
-    logoutUser();
+    logout();
     toast.success("Logged out");
     navigate("/");
   };
@@ -156,7 +156,7 @@ const Navbar = ({ setShowLogin }) => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
                   >
                     <FiLogOut className="w-4 h-4" /> <span>Logout</span>
                   </button>

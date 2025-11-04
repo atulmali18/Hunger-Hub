@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
-import { useUser } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Sign Up");
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const { signup, login } = useUser();
+  const { signup, login } = useAuth();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
