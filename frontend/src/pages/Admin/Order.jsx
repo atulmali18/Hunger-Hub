@@ -332,63 +332,70 @@ const Order = () => {
 
       {/* Order Details Modal */}
       {detailsOrder && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-70">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative animate-fadeIn">
+            {/* Close Button */}
             <button
               onClick={() => setDetailsOrder(null)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors"
             >
-              <FiX size={20} />
+              <FiX size={24} />
             </button>
-            <h2 className="text-xl font-semibold mb-4">
+
+            {/* Header */}
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
               Order #{detailsOrder._id.slice(-8)}
             </h2>
+            <hr className="border-gray-200 mb-4" />
 
-            <div className="space-y-2 text-sm text-gray-700">
+            {/* Customer Info */}
+            <div className="space-y-3 text-sm text-gray-700">
               <p>
-                <strong>Customer:</strong> {detailsOrder.userId?.name} (
+                <span className="font-semibold">Customer:</span> {detailsOrder.userId?.name} (
                 {detailsOrder.userId?.email})
               </p>
               <p>
-                <strong>Status:</strong>{" "}
+                <span className="font-semibold">Status:</span>{" "}
                 <span
-                  className={`px-2 py-1 rounded-md text-xs font-medium ${STATUS_COLORS[detailsOrder.status]
+                  className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[detailsOrder.status]
                     }`}
                 >
                   {detailsOrder.status}
                 </span>
               </p>
               <p>
-                <strong>Total:</strong> ₹
-                {detailsOrder.totalAmount ?? detailsOrder.total}
+                <span className="font-semibold">Total:</span> ₹{detailsOrder.totalAmount ?? detailsOrder.total}
               </p>
               <p>
-                <strong>Phone:</strong>{" "}
-                {detailsOrder.phoneNumber || detailsOrder.userId?.phone || "—"}
+                <span className="font-semibold">Phone:</span> {detailsOrder.phoneNumber || detailsOrder.userId?.phone || "—"}
               </p>
               <p>
-                <strong>Address:</strong>{" "}
+                <span className="font-semibold">Address:</span>{" "}
                 {detailsOrder.deliveryAddress
-                  ? `${detailsOrder.deliveryAddress.street || ""}, ${detailsOrder.deliveryAddress.city || ""
-                  }, ${detailsOrder.deliveryAddress.state || ""} - ${detailsOrder.deliveryAddress.pincode || ""
-                  }`
+                  ? `${detailsOrder.deliveryAddress.street || ""}, ${detailsOrder.deliveryAddress.city || ""}, ${detailsOrder.deliveryAddress.state || ""} - ${detailsOrder.deliveryAddress.pincode || ""}`
                   : "—"}
               </p>
+            </div>
 
-              <div>
-                <strong>Items:</strong>
-                <ul className="mt-1 list-disc list-inside text-gray-600">
-                  {detailsOrder.items?.map((it, idx) => (
-                    <li key={idx}>
-                      {it.quantity}× {it.name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {/* Divider */}
+            <hr className="border-gray-200 my-4" />
+
+            {/* Items */}
+            <div>
+              <h3 className="font-semibold text-gray-800 mb-2">Items</h3>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                {detailsOrder.items?.map((it, idx) => (
+                  <li key={idx} className="flex justify-between">
+                    <span>{it.name}</span>
+                    <span className="font-medium">{it.quantity}×</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };

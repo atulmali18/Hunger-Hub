@@ -10,7 +10,7 @@ const FoodItem = ({ _id, category, description, image, name, price, }) => {
   return (
     <div className='w-full max-w-sm bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1'>
       <img
-        src={`http://localhost:4000/images/${image}`}
+        src={`https://hunger-hub-backend.onrender.com/images/${image}`}
         alt={name}
         className='w-full h-48 object-cover'
       />

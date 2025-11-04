@@ -57,7 +57,7 @@ const List = () => {
                                 >
                                     <td className="px-6 py-3">
                                         <img
-                                            src={`http://localhost:4000/images/${food.image}`}
+                                            src={`https://hunger-hub-backend.onrender.com/images/${food.image}`}
                                             alt={food.name}
                                             className="w-14 h-14 object-cover rounded-md shadow-sm border"
                                         />

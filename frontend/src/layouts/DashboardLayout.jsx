@@ -26,7 +26,7 @@ const DashboardLayout = () => {
             {/* Overlay for mobile sidebar */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden"
+                    className="flex flex-col bg-gray-50 mt-5 lg:hidden"
                     onClick={toggleSidebar}
                 />
             )}
