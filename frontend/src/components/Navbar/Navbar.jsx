@@ -59,8 +59,9 @@ const Navbar = ({ setShowLogin }) => {
         <div className="flex items-center justify-between h-16">
           {/* Left: Logo */}
           <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-2">
-              <img src={assets.logo} alt="Hunger Hub" className="w-28 sm:w-32 object-contain" />
+            <Link to="/" className="flex items-center">
+              <img src={assets.logo} alt="Logo" className="w-52
+               object-contain" />
             </Link>
           </div>
 

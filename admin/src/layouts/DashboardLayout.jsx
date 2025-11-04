@@ -1,0 +1,38 @@
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar/Navbar";
+import Sidebar from "../components/Sidebar/Sidebar";
+
+const DashboardLayout = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+    return (
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            {/* Navbar */}
+            <Navbar onMenuClick={toggleSidebar} />
+
+            {/* Layout */}
+            <div className="flex flex-1">
+                {/* Sidebar */}
+                <Sidebar isOpen={isSidebarOpen} />
+
+                {/* Main content */}
+                <main className="flex-1 p-6 md:p-8 transition-all duration-300 lg:ml-0">
+                    <Outlet />
+                </main>
+            </div>
+
+            {/* Overlay for mobile sidebar */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden"
+                    onClick={toggleSidebar}
+                />
+            )}
+        </div>
+    );
+};
+
+export default DashboardLayout;

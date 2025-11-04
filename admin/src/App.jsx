@@ -1,32 +1,45 @@
-import React from 'react'
-import Navbar from './components/Navbar/Navbar'
-import Sidebar from './components/Sidebar/Sidebar'
-import { Route, Routes } from 'react-router-dom'
-import Add from './pages/Add'
-import List from './pages/List'
-import Order from './pages/Order'
-import { Toaster } from 'react-hot-toast'
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import PrivateRoute from "./components/PrivateRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
 
-
+// Pages
+import Login from "./pages/Login";
+import Add from "./pages/Add";
+import List from "./pages/List";
+import Order from "./pages/Order";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      {/* Toast notifications */}
       <Toaster position="top-right" reverseOrder={false} />
-      <Navbar />
-      <hr className="border-gray-200" />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 p-8">
-          <Routes>
-            <Route path="/add" element={<Add />} />
-            <Route path="/list" element={<List />} />
-            <Route path="/orders" element={<Order />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
-  )
-}
 
-export default App
+      <Routes>
+        {/* Public Route */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Routes inside Dashboard Layout */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <DashboardLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Navigate to="/orders" replace />} />
+          <Route path="add" element={<Add />} />
+          <Route path="list" element={<List />} />
+          <Route path="orders" element={<Order />} />
+        </Route>
+
+        {/* Fallback for unknown routes */}
+        <Route path="*" element={<Navigate to="/orders" replace />} />
+      </Routes>
+    </>
+  );
+};
+
+export default App;

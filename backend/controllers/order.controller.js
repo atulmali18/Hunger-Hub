@@ -230,10 +230,25 @@ export const getUserOrders = async (req, res) => {
 export const updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const { status } = req.body;
+        let { status } = req.body;
+
+        if (!status) return res.status(400).json({ message: "Missing status in request body" });
+
+        status = String(status).trim();
 
         const order = await orderModel.findById(orderId);
         if (!order) return res.status(404).json({ message: "Order not found" });
+
+        // Ensure incoming status matches enum values
+        const allowedStatuses = ["Pending", "Confirmed", "Processing", "Out for Delivery", "Delivered", "Cancelled"];
+        if (!allowedStatuses.includes(status)) {
+            return res.status(400).json({ message: `Invalid status "${status}". Allowed: ${allowedStatuses.join(", ")}` });
+        }
+
+        // If already in requested status, return success (idempotent)
+        if (order.status === status) {
+            return res.status(200).json({ message: `Order already in status "${status}"`, order });
+        }
 
         const validTransitions = {
             Pending: ["Confirmed", "Cancelled"],
@@ -244,13 +259,27 @@ export const updateOrderStatus = async (req, res) => {
             Cancelled: [],
         };
 
-        if (!validTransitions[order.status].includes(status)) {
-            return res.status(400).json({ message: `Cannot transition from ${order.status} to ${status}` });
+        const fromStatus = order.status;
+        const allowedNext = validTransitions[fromStatus] || [];
+
+        if (!allowedNext.includes(status)) {
+            return res.status(400).json({
+                message: `Cannot transition from "${fromStatus}" to "${status}"`,
+                allowedNext,
+            });
         }
 
+        // Apply status change
         order.status = status;
+
+        // update estimated delivery for Out for Delivery
         if (status === "Out for Delivery") {
             order.estimatedDeliveryTime = new Date(Date.now() + 30 * 60 * 1000); // +30 minutes
+        }
+
+        // If order is confirmed and payment method not COD, consider payment completed (optional)
+        if (status === "Confirmed" && order.paymentMethod !== "Cash on Delivery") {
+            order.paymentStatus = "Completed";
         }
 
         await order.save();

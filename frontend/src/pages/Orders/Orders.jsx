@@ -1,42 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import { orderApi } from '../../utils/api';
-import { format } from 'date-fns';
-
-const OrderStatusBadge = ({ status }) => {
-    const getStatusColor = () => {
-        switch (status) {
-            case 'Delivered': return 'bg-green-100 text-green-800';
-            case 'Processing': return 'bg-blue-100 text-blue-800';
-            case 'Cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-yellow-100 text-yellow-800';
-        }
-    };
-
-    return (
-        <span className={`${getStatusColor()} px-3 py-1 rounded-full text-sm font-medium`}>
-            {status}
-        </span>
-    );
-};
+import React, { useEffect, useState } from "react";
+import { orderApi } from "../../utils/api";
+import toast from "react-hot-toast";
+import OrderCard from "./OrderCard";
+import CancelModal from "./CancelModal";
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(null);
+    const [cancelOrderId, setCancelOrderId] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const { data } = await orderApi.getUserOrders();
-                setOrders(data.orders);
+                setOrders(data?.orders ?? data ?? []);
             } catch (error) {
-                console.error("Failed to fetch orders:", error);
+                console.error(error);
+                toast.error("Failed to load orders");
             } finally {
                 setLoading(false);
             }
         };
-
         fetchOrders();
     }, []);
+
+    const handleCancelClick = (orderId) => {
+        setCancelOrderId(orderId);
+        setModalOpen(true);
+    };
+
+    const handleConfirmCancel = async (reason) => {
+        if (!cancelOrderId) return;
+
+        try {
+            setActionLoading(cancelOrderId);
+            await orderApi.cancelOrder(cancelOrderId, { reason });
+            toast.success("Order cancelled");
+
+            setOrders((prev) =>
+                prev.map((o) => (o._id === cancelOrderId ? { ...o, status: "Cancelled" } : o))
+            );
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to cancel order");
+        } finally {
+            setActionLoading(null);
+            setCancelOrderId(null);
+            setModalOpen(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -51,70 +65,26 @@ const Orders = () => {
             <h2 className="text-2xl font-bold mb-6">Your Orders</h2>
 
             {orders.length === 0 ? (
-                <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4">
-                        <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <p className="text-gray-600">No orders found</p>
-                </div>
+                <div className="text-center py-12 text-gray-500">No orders found</div>
             ) : (
                 <div className="space-y-4">
                     {orders.map((order) => (
-                        <div key={order._id} className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="font-semibold">Order #{order._id.slice(-6)}</h3>
-                                    <p className="text-sm text-gray-500">
-                                        {format(new Date(order.createdAt), 'MMM dd, yyyy - HH:mm')}
-                                    </p>
-                                </div>
-                                <OrderStatusBadge status={order.status} />
-                            </div>
-
-                            <div className="border-t pt-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-600">Delivery Address</h4>
-                                        <p className="text-sm mt-1">
-                                            {order.deliveryAddress.street}, {order.deliveryAddress.city}
-                                            <br />
-                                            {order.deliveryAddress.state} - {order.deliveryAddress.pincode}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-600">Payment</h4>
-                                        <p className="text-sm mt-1">
-                                            Method: {order.paymentMethod}
-                                            <br />
-                                            Status: {order.paymentStatus}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mt-4">
-                                <h4 className="text-sm font-medium text-gray-600 mb-2">Items</h4>
-                                <div className="space-y-2">
-                                    {order.items.map((item, index) => (
-                                        <div key={index} className="flex justify-between text-sm">
-                                            <span>{item.quantity}x {item.name}</span>
-                                            <span>₹{item.price * item.quantity}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="border-t mt-4 pt-4">
-                                    <div className="flex justify-between font-semibold">
-                                        <span>Total Amount</span>
-                                        <span>₹{order.totalAmount}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <OrderCard
+                            key={order._id}
+                            order={order}
+                            canCancel={order.status === "Pending" || order.status === "Confirmed"}
+                            onCancelClick={handleCancelClick}
+                            actionLoading={actionLoading}
+                        />
                     ))}
                 </div>
             )}
+
+            <CancelModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onConfirm={handleConfirmCancel}
+            />
         </div>
     );
 };

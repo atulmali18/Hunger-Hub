@@ -22,8 +22,12 @@ orderRouter.get("/", authMiddleware, getUserOrders);
 orderRouter.get("/active", authMiddleware, getUserOrders);
 
 // Admin routes
-orderRouter.patch("/:orderId/status", authMiddleware, isAdmin, updateOrderStatus);
-orderRouter.get("/all", authMiddleware, isAdmin, getUserOrders);
+orderRouter.patch("/:orderId/status",
+    authMiddleware, isAdmin,
+    updateOrderStatus);
+orderRouter.get("/all",
+    authMiddleware, isAdmin,
+    getUserOrders);
 
 // Route to cancel order (both admin and user can access)
 orderRouter.post("/:orderId/cancel", authMiddleware, async (req, res) => {

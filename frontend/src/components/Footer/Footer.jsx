@@ -8,9 +8,9 @@ const Footer = () => {
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-12'>
                     {/* Company Info */}
                     <div className='space-y-3 sm:space-y-4'>
-                        <h3 className='text-lg sm:text-xl font-bold text-orange-500 mb-3 sm:mb-4'>Hunger Hub</h3>
+                        <img src={assets.logo} alt="Hunger Hub Logo" className='w-40 sm:w-48 object-contain mb-2' />
                         <p className='text-white leading-relaxed text-sm sm:text-base'>
-                            Delivering delicious meals to your doorstep with love and care. 
+                            Delivering delicious meals to your doorstep with love and care.
                             Your satisfaction is our priority.
                         </p>
                         <div className='flex items-center gap-3'>
