@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets.js";
 import { useAuth } from "../../context/AuthContext";
 import { StoreContext } from "../../context/StoreContext";
-import toast from "react-hot-toast";
-// icons
 import { FiClipboard, FiBell, FiShoppingCart, FiUser, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 
 const Navbar = ({ setShowLogin }) => {
