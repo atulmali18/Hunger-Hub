@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
 import { useAuth } from "../../context/AuthContext";
-import toast from "react-hot-toast";
 
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Sign Up");
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const [loading, setLoading] = useState(false); // <-- loading state
+  const [loading, setLoading] = useState(false);
   const { signup, login } = useAuth();
 
   const handleChange = (e) =>
@@ -16,16 +15,19 @@ const LoginPopup = ({ setShowLogin }) => {
     e.preventDefault();
     setLoading(true);
     try {
+      let res;
+
       if (currState === "Sign Up") {
-        await signup(formData);
-        toast.success("Signup successful!");
+        res = await signup(formData);
       } else {
-        await login(formData);
-        toast.success("Login successful!");
+        res = await login(formData);
       }
-      setShowLogin(false);
+
+      // Only close modal if operation succeeded
+      if (res.ok) setShowLogin(false);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Server error, try again later");
+      // No toast here — AuthContext already handles it
+      console.error("Auth error:", err);
     } finally {
       setLoading(false);
     }
@@ -80,11 +82,11 @@ const LoginPopup = ({ setShowLogin }) => {
           <button
             type="submit"
             className="w-full bg-red-500 text-white font-semibold py-2 rounded-full hover:bg-red-600 transition flex justify-center items-center gap-2"
-            disabled={loading} // disable button while loading
+            disabled={loading}
           >
-            {loading ? (
+            {loading && (
               <span className="loader border-t-white border-t-2 w-4 h-4 rounded-full animate-spin"></span>
-            ) : null}
+            )}
             {loading ? "Processing..." : currState}
           </button>
         </form>

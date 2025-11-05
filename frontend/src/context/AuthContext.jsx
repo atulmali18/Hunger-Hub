@@ -65,7 +65,11 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const { data } = await axiosInstance.post("/user/login", formData);
 
-            if (!data?.token || !data?.user) throw new Error("Invalid login response");
+            // Check if user & token exist
+            if (!data?.token || !data?.user) {
+                toast.error(data?.message || "Invalid credentials");
+                return { ok: false, error: data };
+            }
 
             saveAuthData(data.user, data.token);
             toast.success("Logged in successfully");
@@ -77,6 +81,8 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+
 
     const getProfile = async () => {
         try {

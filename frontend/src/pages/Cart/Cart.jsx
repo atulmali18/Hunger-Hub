@@ -81,7 +81,7 @@ const Cart = () => {
                     >
                       <div className="flex items-center gap-4">
                         <img
-                          src={`http://localhost:4000/images/${item.image}`}
+                          src={`https://hunger-hub-backend.onrender.com/images/${item.image}`}
                           alt={item.name}
                           className="w-16 h-16 rounded-xl object-cover border border-gray-200"
                         />

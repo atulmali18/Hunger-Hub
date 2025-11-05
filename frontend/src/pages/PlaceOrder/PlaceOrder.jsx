@@ -1,14 +1,19 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, use } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import { usePlaceOrder } from "../../context/PlaceOrderContext";
+import { useAuth } from "../../context/AuthContext";
 
 const PlaceOrder = () => {
+  const { user } = useAuth();
   const { getTotalCartAmount } = useContext(StoreContext);
   const { placeOrder, loading, orderError } = usePlaceOrder();
+
+  const [firstName, lastName] = user?.name?.split(" ") || ["", ""];
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: firstName || "",
+    lastName: lastName || "",
+    email: user?.email || "",
     phone: "",
     address: "",
     city: "",

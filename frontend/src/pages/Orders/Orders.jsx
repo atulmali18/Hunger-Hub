@@ -7,25 +7,31 @@ import CancelModal from "./CancelModal";
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [actionLoading, setActionLoading] = useState(null);
-    const [cancelOrderId, setCancelOrderId] = useState(null);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [actionLoading, setActionLoading] = useState(null); // Loading for cancel/status actions
+    const [cancelOrderId, setCancelOrderId] = useState(null); // Stores orderId for cancel modal
+    const [modalOpen, setModalOpen] = useState(false); // Cancel modal visibility
 
+    // -------------------- Fetch Orders on Mount --------------------
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const { data } = await orderApi.getUserOrders();
                 setOrders(data?.orders ?? data ?? []);
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
                 toast.error("Failed to load orders");
-            } finally {
-                setLoading(false);
             }
         };
+
+        // Fetch initially
         fetchOrders();
+
+        // Poll every 5 seconds
+        const interval = setInterval(fetchOrders, 5000);
+
+        return () => clearInterval(interval); // clean up on unmount
     }, []);
 
+    // -------------------- Cancel Order Flow --------------------
     const handleCancelClick = (orderId) => {
         setCancelOrderId(orderId);
         setModalOpen(true);
@@ -33,22 +39,43 @@ const Orders = () => {
 
     const handleConfirmCancel = async (reason) => {
         if (!cancelOrderId) return;
-
         try {
             setActionLoading(cancelOrderId);
             await orderApi.cancelOrder(cancelOrderId, { reason });
             toast.success("Order cancelled");
 
+            // Update the order status in state directly (instant update)
             setOrders((prev) =>
-                prev.map((o) => (o._id === cancelOrderId ? { ...o, status: "Cancelled" } : o))
+                prev.map((o) =>
+                    o._id === cancelOrderId ? { ...o, status: "Cancelled" } : o
+                )
             );
-        } catch (err) {
-            console.error(err);
+        } catch {
             toast.error("Failed to cancel order");
         } finally {
             setActionLoading(null);
             setCancelOrderId(null);
             setModalOpen(false);
+        }
+    };
+
+    // -------------------- Admin Status Update --------------------
+    const handleAdminStatusUpdate = async (orderId, newStatus) => {
+        setActionLoading(orderId);
+        try {
+            await orderApi.updateOrderStatus(orderId, { status: newStatus });
+            toast.success("Status updated");
+
+            // Update order status directly in state (instant UI update)
+            setOrders((prev) =>
+                prev.map((o) =>
+                    o._id === orderId ? { ...o, status: newStatus } : o
+                )
+            );
+        } catch {
+            toast.error("Failed to update status");
+        } finally {
+            setActionLoading(null);
         }
     };
 
@@ -60,6 +87,7 @@ const Orders = () => {
         );
     }
 
+    // -------------------- Render Orders --------------------
     return (
         <div className="max-w-4xl mx-auto p-4">
             <h2 className="text-2xl font-bold mb-6">Your Orders</h2>
@@ -75,11 +103,13 @@ const Orders = () => {
                             canCancel={order.status === "Pending" || order.status === "Confirmed"}
                             onCancelClick={handleCancelClick}
                             actionLoading={actionLoading}
+                            onStatusUpdate={handleAdminStatusUpdate} // Admin status update function
                         />
                     ))}
                 </div>
             )}
 
+            {/* Cancel Modal */}
             <CancelModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}

@@ -42,7 +42,6 @@ const Navbar = ({ setShowLogin }) => {
 
   const handleLogout = () => {
     logout();
-    toast.success("Logged out");
     navigate("/");
   };
 
@@ -73,7 +72,7 @@ const Navbar = ({ setShowLogin }) => {
                   <Link
                     to={item.path}
                     onClick={() => setActive(item.id)}
-                    className={`px-3 py-2 rounded-md transition ${active === item.id ? "text-red-500" : "hover:text-red-500"
+                    className={`px-3 py-2 rounded-md transition ${active === item.id ? "text-orange-500" : "hover:text-red-500"
                       }`}
                   >
                     {item.label}
