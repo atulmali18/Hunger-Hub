@@ -45,9 +45,9 @@ const Navbar = ({ setShowLogin }) => {
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
-    { id: "menu", label: "Menu", path: "/#menu" },
-    { id: "services", label: "Services", path: "/#services" },
-    { id: "contact", label: "Contact", path: "/#contact" },
+    { id: "menu", label: "Menu", path: "/#explore-menu" },
+    { id: "services", label: "Services", path: "/services" },
+    { id: "contact", label: "Contact", path: "/contact" },
   ];
 
   return (
@@ -67,15 +67,24 @@ const Navbar = ({ setShowLogin }) => {
             <ul className="flex items-center gap-6 text-gray-700 font-medium">
               {navItems.map((item) => (
                 <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    onClick={() => setActive(item.id)}
-                    className={`px-3 py-2 rounded-md transition ${active === item.id ? "text-orange-500" : "hover:text-red-500"
-                      }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
+                <Link
+                  to={item.path}
+                  onClick={(e) => {
+                    setActive(item.id);
+                    if (item.path === "/#explore-menu") {
+                      e.preventDefault();
+                      const element = document.getElementById("explore-menu");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-md transition ${active === item.id ? "text-orange-500" : "hover:text-red-500"
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
               ))}
             </ul>
           </div>
@@ -188,7 +197,17 @@ const Navbar = ({ setShowLogin }) => {
               <Link
                 key={item.id}
                 to={item.path}
-                onClick={() => { setActive(item.id); setMobileOpen(false); }}
+                onClick={(e) => { 
+                  setActive(item.id); 
+                  setMobileOpen(false); 
+                  if (item.path === "/#explore-menu") {
+                    e.preventDefault();
+                    const element = document.getElementById("explore-menu");
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }
+                }}
                 className={`px-3 py-2 rounded hover:bg-gray-50 ${active === item.id ? 'bg-gray-100 font-medium' : 'text-gray-700'}`}
               >
                 {item.label}

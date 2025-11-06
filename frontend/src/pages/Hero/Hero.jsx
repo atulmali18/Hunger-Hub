@@ -2,6 +2,7 @@
 import React from "react";
 import { assets } from "../../assets/assets.js";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -16,7 +17,7 @@ const Hero = () => {
     >
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-opacity-500 rounded-lg"></div>
-      
+
       {/* Content with pure fade-in animation */}
       <motion.div
         className="relative z-10 max-w-2xl px-4 sm:px-6 lg:px-10 text-white"
@@ -26,7 +27,7 @@ const Hero = () => {
         transition={{ duration: 1.2, ease: "easeInOut" }}
       >
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6 leading-tight sm:leading-snug">
-          Order your <br className="hidden sm:block" /> 
+          Order your <br className="hidden sm:block" />
           <span className="sm:hidden"> </span>favourite food here
         </h1>
         <p className="text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed text-gray-100 sm:text-gray-200">
@@ -35,11 +36,22 @@ const Hero = () => {
           mission is to satisfy your cravings and elevate your dining
           experience, one delicious meal at a time.
         </p>
-        <button className="bg-white text-gray-800 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md hover:bg-gray-100 transition text-sm sm:text-base">
+        <Link
+          to="/#explore-menu"
+          onClick={(e) => {
+            e.preventDefault();
+            const element = document.getElementById("explore-menu");
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth" });
+            }
+          }
+          }
+
+          className="bg-white text-gray-800 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md hover:bg-gray-100 transition text-sm sm:text-base">
           View Menu
-        </button>
+        </Link>
       </motion.div>
-    </section>
+    </section >
   );
 };
 

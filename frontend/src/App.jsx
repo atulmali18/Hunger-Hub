@@ -4,7 +4,6 @@ import { Toaster } from "react-hot-toast";
 
 // Context & Auth
 import PrivateRoute from "./components/PrivateRoute";
-import { useAuth } from "./context/AuthContext";
 
 
 
@@ -14,6 +13,8 @@ import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Orders from "./pages/Orders/Orders";
 import Verify from "./pages/Verify/Verify";
+import Services from "./pages/Services/Services";
+import Contact from "./pages/Contact/Contact";
 import UserLayout from "./layouts/UserLayout";
 
 
@@ -26,7 +27,6 @@ import DashboardLayout from "./layouts/DashboardLayout";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const { isAdmin } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -39,6 +39,8 @@ const App = () => {
           element={<UserLayout showLogin={showLogin} setShowLogin={setShowLogin} />}
         >
           <Route index element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<PlaceOrder />} />
           <Route path="orders" element={<Orders />} />

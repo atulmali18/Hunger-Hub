@@ -3,7 +3,7 @@ import { menu_list } from "../../assets/assets.js";
 
 const ExploreMenu = ({ category, setCategory }) => {
   return (
-    <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 text-center bg-gray-50">
+    <section id="explore-menu" className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 text-center bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-800 mb-3 sm:mb-4">
