@@ -18,7 +18,7 @@ const ExploreMenu = ({ category, setCategory }) => {
         <div className="flex flex-wrap justify-center gap-3 sm:gap-4 px-4">
           {menu_list.map((item, index) => (
             <div
-              onClick={() => setCategory((prev) => prev === item.menu_name? "All" : item.menu_name)}
+              onClick={() => setCategory((prev) => prev === item.menu_name ? "All" : item.menu_name)}
               key={index}
               className="flex flex-col items-center bg-white rounded-xl p-3 sm:p-4 hover:shadow-lg hover:scale-105 transition transform duration-300 cursor-pointer min-w-[100px] sm:min-w-[120px]"
             >
@@ -40,5 +40,7 @@ const ExploreMenu = ({ category, setCategory }) => {
     </section>
   );
 };
+
+
 
 export default ExploreMenu;
