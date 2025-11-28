@@ -11,7 +11,7 @@ A full-stack food delivery web application built with React.js, Node.js, Express
 - **Shopping Cart**: Add/remove items, update quantities
 - **Order Placement**: Seamless order placement with payment integration
 - **Order History**: View past orders and track status
-- **Responsive Design**: Mobile-friendly interface
+- **Responsive Design**: Mobile-friendly interface.
 
 ### Admin Features
 
