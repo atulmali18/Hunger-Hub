@@ -2,6 +2,7 @@
 
 A full-stack food delivery web application built with React.js, Node.js, Express.js, and MongoDB. Hunger-Hub provides a seamless platform for users to browse food items, manage their cart, place orders, and for administrators to manage the food inventory and orders.
 
+
 ## 🌟 Features
 
 ### User Features
