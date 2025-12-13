@@ -21,7 +21,9 @@ app.use(express.json())
 app.use(cors({
     origin: [
         "https://hunger-hub-app.vercel.app",
-        "http://localhost:5173"],
+        "http://localhost:5173",
+        "https://portfolio-website-eosin-omega.vercel.app"
+    ],
     credentials: true,
 }));
 app.use("/images", express.static('uploads'))
